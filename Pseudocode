@@ -1,0 +1,54 @@
+Initialize the coreset as an empty set.
+
+Compute the initial weights for all data points.
+
+For each point in the coreset:
+
+  a. Compute the sub-sampling probabilities for the data points.
+
+  b. Select the top m data points with the highest probability values.
+
+  c. Compute the weighted mean and covariance of the selected data points.
+
+  d. Compute the projection matrix from the covariance matrix.
+
+  e. Project the selected data points onto the subspace.
+
+  f. Compute the weights of the projected data points.
+
+  g. Add the weighted mean of the projected data points to the coreset.
+
+  h. Update the weights for the remaining data points based on the projected data points.
+
+Return the coreset.
+
+
+
+Sure! Here's a better formatted list of the steps to construct a composable core set:
+
+  1) Initialize an empty set of points, called the "core set".
+  2)Read in the first data point from the stream.
+  3)Add the first data point to the core set.
+  4)Read in the next data point from the stream.
+  5)Compute the distance between the new data point and each point in the current core set.
+  6)If the new data point is closer to any point in the current core set than a certain threshold distance, skip the new data point and go back to step 4.
+  7)If the new data point is not closer to any point in the current core set than the threshold distance, add the new data point to the core set.
+
+Repeat steps 4-7 for each new data point in the stream.
+
+
+// Define a function to make a regular core set
+function makeRegularCoreSet(dataStream, thresholdDistance, maxSize):
+    coreSet = [] // Initialize an empty core set
+    while len(coreSet) < maxSize and dataStream.hasNext():
+        newPoint = dataStream.getNext() // Read in the next data point from the stream
+        isCloser = false // Initialize a flag for whether the new point is closer to an existing point than the threshold distance
+        for point in coreSet:
+            if distance(newPoint, point) < thresholdDistance:
+                isCloser = true // Set the flag to true if the new point is closer to an existing point than the threshold distance
+                break // Exit the loop early if the flag is set to true
+        if not isCloser:
+            coreSet.append(newPoint) // Add the new point to the core set if it is not closer to any existing point than the threshold distance
+    return coreSet // Return the resulting core set
+
+
