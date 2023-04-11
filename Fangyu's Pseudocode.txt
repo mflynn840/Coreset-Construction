@@ -1,0 +1,28 @@
+Initialize the coreset as an empty set.
+
+Compute the initial weights for all data points.
+
+For each point in the coreset:
+
+  a. Compute the sub-sampling probabilities for the data points.
+
+  b. Select the top m data points with the highest probability values.
+
+  c. Compute the weighted mean and covariance of the selected data points.
+
+  d. Compute the projection matrix from the covariance matrix.
+
+  e. Project the selected data points onto the subspace.
+
+  f. Compute the weights of the projected data points.
+
+  g. Add the weighted mean of the projected data points to the coreset.
+
+  h. Update the weights for the remaining data points based on the projected data points.
+
+Return the coreset.
+
+
+
+
+
