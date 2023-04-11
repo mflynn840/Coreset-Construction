@@ -28,7 +28,9 @@ class CoreSet:
             # select the top m points with highest probability values
             idx = np.argpartition(p, -m)[-m:]
             X_subset = X[idx, :]
+            print("X_subset: " + str(X_subset))
             w_subset = w[idx]
+            print("W_subset: " + str(w_subset))
 
             # compute the weighted mean and covariance
             mu = np.sum(X_subset * w_subset[:, np.newaxis], axis=0) / np.sum(w_subset)
@@ -59,7 +61,7 @@ X, y = make_blobs(n_samples=300, centers=10, n_features=5, random_state=50)
 w = np.ones(X.shape[0])
 
 # Create a composable coreset of size 50
-m = 3
+m = 9
 cs = CoreSet()
 cs.shape = X.shape
 C = cs.composable_coreset(X, w, m)

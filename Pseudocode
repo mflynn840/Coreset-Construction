@@ -23,3 +23,17 @@ For each point in the coreset:
 Return the coreset.
 
 
+
+Sure! Here's a better formatted list of the steps to construct a composable core set:
+
+  1) Initialize an empty set of points, called the "core set".
+  2)Read in the first data point from the stream.
+  3)Add the first data point to the core set.
+  4)Read in the next data point from the stream.
+  5)Compute the distance between the new data point and each point in the current core set.
+  6)If the new data point is closer to any point in the current core set than a certain threshold distance, skip the new data point and go back to step 4.
+  7)If the new data point is not closer to any point in the current core set than the threshold distance, add the new data point to the core set.
+
+Repeat steps 4-7 for each new data point in the stream.
+
+
