@@ -61,11 +61,19 @@ def testCoreSetConstruction():
     coreset = Coreset(coors)
 
     coreset.constructBruteForce(.8)
-    print(coreset.coreSet)
+    C = coreset.coreSet
+
+    xs = []
+    ys = []
+
+    for c in C:
+        xs.append(c[0])
+        ys.append(c[1])
+
 
     plt.figure(figsize=(8, 6))  # Adjust the figure size to 8x6 inches
-    plt.scatter(coors[0], c=y)
-    #plt.scatter(C[:, 0], C[:, 1], marker='x', color='r', s=100)
+    plt.scatter(X, y, c=y)
+    plt.scatter(xs, ys, marker='x', color='r', s=100)
     plt.title('Composable Coreset')
     plt.show()
 
