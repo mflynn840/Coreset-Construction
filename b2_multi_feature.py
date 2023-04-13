@@ -40,7 +40,7 @@ class Coreset:
     def Idist(self, Citem, newItem):
 
         # Adjust the scale factor here
-        return self.dist(Citem[0], Citem[1], newItem[0], newItem[1], 1.5)
+        return self.dist(Citem[0], Citem[1], newItem[0], newItem[1], 20)
 
     def dist(self, x1: float, y1: float, x2: float, y2: float, scale_factor: float):
 
@@ -57,7 +57,7 @@ def testCoreSetConstruction():
     coreset = Coreset(X)
 
 
-    coreset.constructBruteForce(.8)
+    coreset.constructBruteForce(.2)
     C = coreset.coreSet
 
     print("Core set is:")
