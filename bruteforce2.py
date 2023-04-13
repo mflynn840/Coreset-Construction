@@ -38,6 +38,9 @@ class Coreset:
     def dist(self, x1:float, y1:float, x2:float, y2: float):
 
         return math.sqrt((math.pow(x2-x1, 2)) + (math.pow(y2-y1, 2)))
+    
+    def clear(self):
+        self.coreSet = []
 
 
 
@@ -56,27 +59,31 @@ def testCoreSetConstruction():
 
     coreset = Coreset(coors)
 
-    coreset.constructBruteForce(.8)
-    C = coreset.coreSet
+    dist = 0.0
+    while dist < 1.0 :
+        coreset.constructBruteForce(dist)
+        C = coreset.coreSet
 
-    print("Core set is:")
-    print(C)
+        print("Core set is:")
+        print(C)
 
-    xs = []
-    ys = []
+        xs = []
+        ys = []
 
-    for c in C:
-        xs.append(c[0])
-        ys.append(c[1])
+        for c in C:
+            xs.append(c[0])
+            ys.append(c[1])
 
-    print(len(xs))
-    print(len(ys))
+        print(len(xs))
+        print(len(ys))
 
-    plt.figure(figsize=(8, 6))  # Adjust the figure size to 8x6 inches
-    plt.scatter(X, y, c=y)
-    plt.scatter(xs, ys, marker='x', color='r', s=100)
-    plt.title('Composable Coreset')
-    plt.show()
+        plt.figure(figsize=(8, 6))  # Adjust the figure size to 8x6 inches
+        plt.scatter(X, y, c=y)
+        plt.scatter(xs, ys, marker='x', color='r', s=100)
+        plt.title('Composable Coreset')
+        plt.show()
+        coreset.clear()
+        dist+=.1
 
 
 
