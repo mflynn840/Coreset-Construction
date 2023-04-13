@@ -13,6 +13,7 @@ class Coreset:
 
         self.coreSet.append(self.originalDataset[0])
 
+
         # Compute the max possible dist
         max_dist = np.max(np.sqrt(np.sum(np.square(self.originalDataset[:, np.newaxis, :] - self.originalDataset), axis=2)))
         # for each item in the steam
@@ -46,6 +47,7 @@ class Coreset:
         return math.sqrt((math.pow(x2 - x1, 2)) + (math.pow(y2 - y1, 2))) / scale_factor
 
 
+
 def testCoreSetConstruction():
     # Generate synthetic dataset
     X, y = make_blobs(n_samples=100, centers=10, n_features=2, random_state=50)
@@ -53,6 +55,7 @@ def testCoreSetConstruction():
     print(y)
 
     coreset = Coreset(X)
+
 
     coreset.constructBruteForce(.8)
     C = coreset.coreSet
@@ -68,3 +71,4 @@ def testCoreSetConstruction():
 
 
 testCoreSetConstruction()
+
