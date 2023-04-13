@@ -12,3 +12,43 @@
 
     #return S
 
+
+import random
+
+
+class GMMCoresetConstruction:
+
+    def __init__(self):
+        self.coreset = []
+
+    def GMM(self, S: set(), k: int):
+
+    #Input S: a set of points, k: size of the subset
+    #Output S' a subset of S of size k.
+        Sprime = set()
+        Sprime.union(S[random.randint(0, len(S))])
+
+        for i in range(2,k):
+
+            newPoint = findNewPoints()#<- p ∈ S \ S' which maximizes min(x∈S')(dist(p, x))
+
+            Sprime.union(newPoint)
+
+
+
+        return Sprime
+
+    def findNewPoints(self, S: set(), Sprime: set()):
+        #return p ∈ S \ S' which maximizes min(x∈S')(dist(p, x))
+        x=1
+
+    
+    def dist(self, p, x):
+        x= 1
+        
+
+
+
+    
+
+
