@@ -20,23 +20,26 @@ class Coreset:
 
             eligible = True
             # Compute the distance between the new data point and each point in the current core set.
+            max_item_dist = np.max(np.sqrt(np.sum(np.square(item - np.array(self.coreSet)), axis=1)))
 
-            for cItem in self.coreSet:
-                if self.Idist(cItem, item) < thresholdDistance:
-                    eligible = False
-                    break
+            if max_item_dist > thresholdDistance:
+                eligible = True
+                for cItem in self.coreSet:
+                    if self.Idist(cItem, item) < thresholdDistance:
+                        eligible = False
+                        break
 
             if eligible:
                 self.coreSet.append(item)
 
-            if np.max(np.sqrt(np.sum(np.square(self.originalDataset[:, np.newaxis, :] - np.array(self.coreSet)),
-                                     axis=2))) <= thresholdDistance:
+            # When adding any more points to the core set will not affect the final result
+            if max_dist - max_item_dist <= thresholdDistance:
                 break
 
     def Idist(self, Citem, newItem):
 
         # Adjust the scale factor here
-        return self.dist(Citem[0], Citem[1], newItem[0], newItem[1], 2.0)
+        return self.dist(Citem[0], Citem[1], newItem[0], newItem[1], 1.5)
 
     def dist(self, x1: float, y1: float, x2: float, y2: float, scale_factor: float):
 
