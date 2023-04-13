@@ -24,14 +24,19 @@ class Coreset:
                     break
 
             if eligable:
-                self.coreSet.append(item)
+                self.coreSet.append(self.originalDataset[item])
 
-    def Idist(self, item1, item2):
-        return self.dist(item1[0], item1[1], item2[0], item2[1])
+    def Idist(self, Citem, newItem):
+        #print("core set item is " + str(type(Citem)))
+        #print("new item is " + str(type(newItem)))
+
+        #print(Citem)
+        #print(newItem)
+
+        return self.dist(Citem[0], Citem[1], newItem[0], newItem[1])
     
     def dist(self, x1:float, y1:float, x2:float, y2: float):
-        print(type(x2))
-        print(len(x2))
+
         return math.sqrt((math.pow(x2-x1, 2)) + (math.pow(y2-y1, 2)))
 
 
@@ -51,13 +56,15 @@ def testCoreSetConstruction():
         coors.append((X[i][0], y[i]))
     print("done")
 
+    print(coors)
+
     coreset = Coreset(coors)
 
     coreset.constructBruteForce(.8)
     print(coreset.coreSet)
 
     plt.figure(figsize=(8, 6))  # Adjust the figure size to 8x6 inches
-    plt.scatter(X[:, 0], X[:, 1], c=y)
+    plt.scatter(coors[0], c=y)
     #plt.scatter(C[:, 0], C[:, 1], marker='x', color='r', s=100)
     plt.title('Composable Coreset')
     plt.show()
