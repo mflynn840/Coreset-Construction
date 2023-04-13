@@ -13,29 +13,39 @@ class Coreset:
 
         self.coreSet.append(self.originalDataset[0])
 
+
+        # Compute the max possible dist
+        max_dist = np.max(np.sqrt(np.sum(np.square(self.originalDataset[:, np.newaxis, :] - self.originalDataset), axis=2)))
         # for each item in the steam
-        for item in range(1, len(self.originalDataset)):
+        for item in self.originalDataset[1:]:
 
             eligible = True
             # Compute the distance between the new data point and each point in the current core set.
-            for cItem in self.coreSet:
-                if self.Idist(cItem, self.originalDataset[item]) < thresholdDistance:
-                    eligible = False
-                    break
+            max_item_dist = np.max(np.sqrt(np.sum(np.square(item - np.array(self.coreSet)), axis=1)))
+
+            if max_item_dist > thresholdDistance:
+                eligible = True
+                for cItem in self.coreSet:
+                    if self.Idist(cItem, item) < thresholdDistance:
+                        eligible = False
+                        break
 
             if eligible:
-                self.coreSet.append(self.originalDataset[item])
+                self.coreSet.append(item)
+
+            # When adding any more points to the core set will not affect the final result
+            if max_dist - max_item_dist <= thresholdDistance:
+                break
 
     def Idist(self, Citem, newItem):
 
-        return self.dist(Citem[0], Citem[1], newItem[0], newItem[1])
+        # Adjust the scale factor here
+        return self.dist(Citem[0], Citem[1], newItem[0], newItem[1], 1.5)
 
-    def dist(self, x1: float, y1: float, x2: float, y2: float):
+    def dist(self, x1: float, y1: float, x2: float, y2: float, scale_factor: float):
 
-        return math.sqrt((math.pow(x2 - x1, 2)) + (math.pow(y2 - y1, 2)))
-    
-    def clear(self):
-        self.coreSet = []
+        return math.sqrt((math.pow(x2 - x1, 2)) + (math.pow(y2 - y1, 2))) / scale_factor
+
 
 
 def testCoreSetConstruction():
@@ -46,22 +56,19 @@ def testCoreSetConstruction():
 
     coreset = Coreset(X)
 
-    dist = 0.0
-    while dist < 1.0 :
-        coreset.constructBruteForce(dist)
-        C = coreset.coreSet
 
-        print("Core set is:")
-        print(C)
+    coreset.constructBruteForce(.8)
+    C = coreset.coreSet
 
-        plt.figure(figsize=(8, 6))  # Adjust the figure size to 8x6 inches
-        plt.scatter(X[:, 0], X[:, 1], c=y)
-        plt.scatter(np.array(C)[:, 0], np.array(C)[:, 1], marker='x', color='r', s=100)
-        plt.title('Composable Coreset')
-        plt.show()
-        coreset.clear()
-        dist += .1
+    print("Core set is:")
+    print(C)
 
+    plt.figure(figsize=(8, 6))  # Adjust the figure size to 8x6 inches
+    plt.scatter(X[:, 0], X[:, 1], c=y)
+    plt.scatter(np.array(C)[:, 0], np.array(C)[:, 1], marker='x', color='r', s=100)
+    plt.title('Composable Coreset')
+    plt.show()
 
 
 testCoreSetConstruction()
+
