@@ -19,7 +19,7 @@ class Coreset:
             eligable = True
             #Compute the distance between the new data point and each point in the current core set.
             for cItem in self.coreSet:
-                if self.Idist(cItem, self.originalDataset[item]) > thresholdDistance:
+                if self.Idist(cItem, self.originalDataset[item]) < thresholdDistance:
                     eligable = False
                     break
 
@@ -41,10 +41,6 @@ class Coreset:
 
 
 
-
-
-
-
 def testCoreSetConstruction():
     # Generate synthetic dataset
     X, y = make_blobs(n_samples=100, centers=10, n_features=1, random_state=50)
@@ -63,6 +59,9 @@ def testCoreSetConstruction():
     coreset.constructBruteForce(.8)
     C = coreset.coreSet
 
+    print("Core set is:")
+    print(C)
+
     xs = []
     ys = []
 
@@ -70,6 +69,8 @@ def testCoreSetConstruction():
         xs.append(c[0])
         ys.append(c[1])
 
+    print(len(xs))
+    print(len(ys))
 
     plt.figure(figsize=(8, 6))  # Adjust the figure size to 8x6 inches
     plt.scatter(X, y, c=y)
