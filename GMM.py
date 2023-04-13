@@ -13,6 +13,7 @@
     #return S
 
 
+from math import dist
 import random
 
 
@@ -40,7 +41,26 @@ class GMMCoresetConstruction:
 
     def findNewPoints(self, S: set(), Sprime: set()):
         #return p ∈ S \ S' which maximizes min(x∈S')(dist(p, x))
-        x=1
+
+        maxMinDistance = -1
+        bestPoint = None
+
+        for p in S.difference(Sprime):
+
+            minDistance = -1
+            point = None
+
+            for x in Sprime:
+                if dist(p, x) > minDistance:
+                    minDistance = dist(p,x)
+                    point = x
+
+            if minDistance < maxMinDistance:
+                maxMinDistance = minDistance
+                bestPoint = point
+        
+        return bestPoint
+        
 
     
     def dist(self, p, x):
