@@ -37,7 +37,9 @@ class Coreset:
     
     def dist(self, x1:float, y1:float, x2:float, y2: float):
 
-        return math.sqrt((math.pow(x2-x1, 2)) + (math.pow(y2-y1, 2)))
+        dist = math.sqrt((math.pow(x2-x1, 2)) + (math.pow(y2-y1, 2)))
+        print("Distance: " + str(dist))
+        return dist
     
     def clear(self):
         self.coreSet = []
