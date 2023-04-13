@@ -13,26 +13,34 @@ class Coreset:
 
         self.coreSet.append(self.originalDataset[0])
 
+        # Compute the max possible dist
+        max_dist = np.max(np.sqrt(np.sum(np.square(self.originalDataset[:, np.newaxis, :] - self.originalDataset), axis=2)))
         # for each item in the steam
-        for item in range(1, len(self.originalDataset)):
+        for item in self.originalDataset[1:]:
 
             eligible = True
             # Compute the distance between the new data point and each point in the current core set.
+
             for cItem in self.coreSet:
-                if self.Idist(cItem, self.originalDataset[item]) < thresholdDistance:
+                if self.Idist(cItem, item) < thresholdDistance:
                     eligible = False
                     break
 
             if eligible:
-                self.coreSet.append(self.originalDataset[item])
+                self.coreSet.append(item)
+
+            if np.max(np.sqrt(np.sum(np.square(self.originalDataset[:, np.newaxis, :] - np.array(self.coreSet)),
+                                     axis=2))) <= thresholdDistance:
+                break
 
     def Idist(self, Citem, newItem):
 
-        return self.dist(Citem[0], Citem[1], newItem[0], newItem[1])
+        # Adjust the scale factor here
+        return self.dist(Citem[0], Citem[1], newItem[0], newItem[1], 2.0)
 
-    def dist(self, x1: float, y1: float, x2: float, y2: float):
+    def dist(self, x1: float, y1: float, x2: float, y2: float, scale_factor: float):
 
-        return math.sqrt((math.pow(x2 - x1, 2)) + (math.pow(y2 - y1, 2)))
+        return math.sqrt((math.pow(x2 - x1, 2)) + (math.pow(y2 - y1, 2))) / scale_factor
 
 
 def testCoreSetConstruction():
