@@ -20,6 +20,13 @@ class LocalSearch:
             Sprime.difference(Pprime.union(p))
 
         return Sprime
+    
+    def localSearchConditions(S: set(), Sprime: set()):
+        #the local search conditions are as follows:
+
+        #true if: there exists p e S\S' and p' e S' s.t 
+            div(S'\{p'} U {p}) > div(S')(1+ epsilon/n)
+            
 
     def getSPrime(self, S: set(), k: int):
         
