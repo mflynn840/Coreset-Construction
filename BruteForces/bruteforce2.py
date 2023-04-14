@@ -1,8 +1,9 @@
-#Sure! Here's a better formatted list of the steps to construct a composable core set:
+# Sure! Here's a better formatted list of the steps to construct a composable core set:
 import math
 import numpy as np
 from sklearn.datasets import make_blobs
 import matplotlib.pyplot as plt
+
 
 class Coreset:
     def __init__(self, originalDataset: tuple):
@@ -13,11 +14,11 @@ class Coreset:
 
         self.coreSet.append(self.originalDataset[0])
 
-        #for each item in the steam
+        # for each item in the steam
         for item in range(1, len(self.originalDataset)):
 
             eligable = True
-            #Compute the distance between the new data point and each point in the current core set.
+            # Compute the distance between the new data point and each point in the current core set.
             for cItem in self.coreSet:
                 if self.Idist(cItem, self.originalDataset[item]) < thresholdDistance:
                     eligable = False
@@ -27,23 +28,22 @@ class Coreset:
                 self.coreSet.append(self.originalDataset[item])
 
     def Idist(self, Citem, newItem):
-        #print("core set item is " + str(type(Citem)))
-        #print("new item is " + str(type(newItem)))
+        # print("core set item is " + str(type(Citem)))
+        # print("new item is " + str(type(newItem)))
 
-        #print(Citem)
-        #print(newItem)
+        # print(Citem)
+        # print(newItem)
 
         return self.dist(Citem[0], Citem[1], newItem[0], newItem[1])
-    
-    def dist(self, x1:float, y1:float, x2:float, y2: float):
 
-        dist = math.sqrt((math.pow(x2-x1, 2)) + (math.pow(y2-y1, 2)))
+    def dist(self, x1: float, y1: float, x2: float, y2: float):
+
+        dist = math.sqrt((math.pow(x2 - x1, 2)) + (math.pow(y2 - y1, 2)))
         print("Distance: " + str(dist))
         return dist
-    
+
     def clear(self):
         self.coreSet = []
-
 
 
 def testCoreSetConstruction():
@@ -62,7 +62,7 @@ def testCoreSetConstruction():
     coreset = Coreset(coors)
 
     dist = 0.0
-    while dist < 1.0 :
+    while dist < 1.0:
         coreset.constructBruteForce(dist)
         C = coreset.coreSet
 
@@ -85,13 +85,10 @@ def testCoreSetConstruction():
         plt.title('Composable Coreset')
         plt.show()
         coreset.clear()
-        dist+=.1
-
+        dist += .1
 
 
 testCoreSetConstruction()
-
-        
 
 #  1) Initialize an empty set of points, called the "core set".
 #  2) Read in the first data point from the stream.
