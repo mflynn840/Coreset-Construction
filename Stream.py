@@ -5,6 +5,7 @@ from collections import OrderedDict
 class DStream:
     def __init__(self, S: set()):
 
+        self.S = s
         self.values = OrderedDict()
         self.currentTime = 0
 
@@ -12,10 +13,9 @@ class DStream:
         for s in S:
             self.values.update({time: s})
             time += 1
-        
-    
 
-
+    def getSet(self):
+        return self.S
     
     def getNext(self):
         x= self.values[self.currentTime]
