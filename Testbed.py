@@ -50,22 +50,27 @@ x = TestBed("Datasets/cifar-10-batches-py/data_batch")
 
     
 #    return S'
-def CoresetConstruction(S, k):
+
+
+def CoresetConstruction(Streams, k):
+
     S_prime = []
     sum_points = None
 
     # Loop over each stream Si
-    for Si in S:
-        s = Si.getNext()
+    for Stream in Streams:
+        s = Stream.getNext()
 
         # if size of S' < k:
         if len(S_prime) < k:
+
+            if Stream.hasNext():
             # add s to S'
-            S_prime.append(s)
-            if sum_points is None:
-                sum_points = s
-            else:
-                sum_points += s
+                S_prime.append(s)
+                if sum_points is None:
+                    sum_points = s
+                else:
+                    sum_points += s
 
         else:
             avg_points = sum_points / len(S_prime)
