@@ -53,20 +53,24 @@ x = TestBed("Datasets/cifar-10-batches-py/data_batch")
 #    return S'
 
 
-def CoresetConstruction(Streams, k):
+def CoresetConstruction(Streams, k) -> set:
 
     S_prime = []
 
     # Loop over each stream Si
     for Stream in Streams:
-        s = Stream.getNext()
+
+
+        if Stream.hasNext():
+            s = Stream.getNext()
+        else:
+            continue
+
 
         # if size of S' < k:
         if len(S_prime) < k:
-
-            if Stream.hasNext():
             # add s to S'
-                S_prime.append(s)
+            S_prime.append(s)
 
         else:
             s_min = (None, None)
@@ -97,6 +101,9 @@ def CoresetConstruction(Streams, k):
                     S_prime.remove(s_j)
 
     return S_prime
+
+
+
 
 
 
