@@ -31,19 +31,14 @@ class CifarLoader:
         for i in range(0, len(rawImages)):
             self.images.append(np.transpose(np.reshape(rawImages[i], (3, 32, 32)), (1, 2, 0)))
 
-        print(self.images[0].shape)
 
-        
-
-
-
-    def showImage(self):
+    def showImage(self, index:int):
         # Display the image using Matplotlib
-        plt.imshow(self.image, interpolation='bicubic')
-        plt.title(f'CIFAR-10 Label: {self.label}')
+        plt.imshow(self.images[index], interpolation='bicubic')
+        plt.title(f'CIFAR-10 Label: {self.labels[index]}')
         plt.show()
 
 
 
 x = CifarLoader("data_batch_1")
-#x.showImage()
+x.showImage(1)
