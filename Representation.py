@@ -3,6 +3,7 @@ from keras.layers import Dense, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D, BatchNormalization
 from keras.models import load_model
 from numpy import array
+from LoadCIFARFile import CifarDataset
 
 
 x_train.shape is the shape of the input vectors
@@ -10,11 +11,16 @@ x_train.shape is the shape of the input vectors
 class CIFAR10Model:
 
     def __init__(self, fileName: str):
+        self.dataset = LoadCIFARFile(fileName)
         self.makeModel()
+
 
 
     def makeModel(self):
 
+
+        num_classes = 10
+        x
         #a Non recurrent, convolutional deep neural networks with 4 hidden layers
         model = Sequential()
         model.add(Conv2D(32, (3, 3), padding='same', input_shape=x_train.shape[1:], name='conv1'))
@@ -39,7 +45,7 @@ class CIFAR10Model:
         model.add(BatchNormalization(axis=1, name='bn_outptut'))
         model.add(Activation('softmax'))
 
-        num_classes = 10
+        
 
         self.model = model
 

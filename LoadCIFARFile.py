@@ -2,13 +2,15 @@ import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+from numpy import dot
+from numpy.linalg import norm
 
 
 # Turns cifar batches into numpy arrays
 class CifarDataset:
 
-    def __init__(self, fileName: str):
-        self.file = os.path.join(os.getcwd(), "Coreset-Construction", "Datasets", "cifar-10-batches-py", fileName)
+    def __init__(self, batch: int):
+        self.file = os.path.join(os.getcwd(), "Coreset-Construction", "Datasets", "cifar-10-batches-py", "data_batch_" + str(batch))
         self.makeDictionary()
 
         self.classes = ["Airplane", "Automobile",
@@ -49,7 +51,48 @@ class CifarDataset:
         return dSet
 
 
-x = CifarDataset("data_batch_1")
+#x = CifarDataset("data_batch_1")
 
-for i in range(10):
-    x.showImage(i)
+#for i in range(10):
+#    x.showImage(i)
+
+
+class CIFARVectorSet:
+
+    def __init__(self, batch: int) ->None :
+
+        self.file = os.path.join(os.getcwd(), "Coreset-Construction", "Datasets", "cifar10-vectors-py", "vectors-efficientnet_b" + str(batch))
+        self.vectors = self.unpickle(self.file)
+        #print(len(self.dict[1]))
+        #print(len(self.dict))
+
+    
+    def unpickle(self, file):
+        with open(file, 'rb') as fo:
+            dict = pickle.load(fo, encoding='bytes')
+        return dict
+    
+    def cosSim(self, index1:int, index2:int) -> float:
+        a = self.vectors[index1]
+        b = self.vectors[index2]
+
+        return dot(a,b)/(norm(a)*norm(b))
+
+        
+x = CIFARVectorSet(6)
+y = CifarDataset(1)
+
+
+
+ones = []
+for i in range(len(y.labels)):
+    if y.labels[i] == 1:
+        ones.append(i)
+
+
+#print(ones)
+
+print(x.cosSim(1, ones[2]))
+
+y.showImage(1)
+y.showImage(ones[2])
