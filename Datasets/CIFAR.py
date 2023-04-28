@@ -1,22 +1,49 @@
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
-def unpickle(file):
-    with open(file, 'rb') as fo:
-        dict = pickle.load(fo, encoding='bytes')
-    return dict
+#Turns cifar batches into numpy arrays
+class CifarLoader:
+
+    def __init__(self, fileName: str):
+        self.file = os.path.join(os.getcwd(), "Coreset-Construction", "Datasets", "cifar-10-batches-py", fileName)
+        self.makeDictionary()
 
 
-cifar_dict = unpickle("cifar-10-batches-py/data_batch_1")
-# Extract an image and its label from the dictionary
-image = cifar_dict[b'data'][1]
-label = cifar_dict[b'labels'][1]
+    def unpickle(self, file):
+        with open(file, 'rb') as fo:
+            dict = pickle.load(fo, encoding='bytes')
+        return dict
 
-# Reshape the image data to its original dimensions
-image = np.transpose(np.reshape(image, (3, 32, 32)), (1, 2, 0))
 
-# Display the image using Matplotlib
-plt.imshow(image, interpolation='bicubic')
-plt.title(f'CIFAR-10 Label: {label}')
-plt.show()
+    def makeDictionary(self):   
+        cifar_dict = self.unpickle(self.file)
+        # Extract an image and its label from the dictionary
+        rawImages = cifar_dict[b'data']
+        self.labels = cifar_dict[b'labels']
+
+
+
+
+        self.images = []
+        # Reshape the image data to its original dimensions
+        for i in range(0, len(rawImages)):
+            self.images.append(np.transpose(np.reshape(rawImages[i], (3, 32, 32)), (1, 2, 0)))
+
+        print(self.images[0].shape)
+
+        
+
+
+
+    def showImage(self):
+        # Display the image using Matplotlib
+        plt.imshow(self.image, interpolation='bicubic')
+        plt.title(f'CIFAR-10 Label: {self.label}')
+        plt.show()
+
+
+
+x = CifarLoader("data_batch_1")
+#x.showImage()
