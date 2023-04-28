@@ -48,14 +48,17 @@ def div(S_prime):
     s_min = (None, None)
     dist_min = 0
 
+
     for s_i in S_prime:
         for s_j in S_prime:
+
 
             if s_i != s_j:
                 dist = cosine_similarity(np.reshape(s_i, (1, -1)), np.reshape(s_j, (1, -1)))
                 if dist < dist_min:
                     dist_min = dist
                     s_min = (s_i, s_j)
+
 
     return s_min, dist_min
 
@@ -73,6 +76,7 @@ def adjust(S_prime, s):
 
         if dist_i > dist_j:
             S_prime.remove(s_i)
+
 
         else:
             S_prime.remove(s_j)
@@ -94,3 +98,4 @@ def CoresetConstruction(Streams, k):
             adjust(S_prime, s)
 
     return S_prime
+
