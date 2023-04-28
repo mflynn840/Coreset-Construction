@@ -6,8 +6,6 @@ import os
 #Turns cifar batches into numpy arrays
 class CifarDataset:
 
-    
-
     def __init__(self, fileName: str):
         self.file = os.path.join(os.getcwd(), "Coreset-Construction", "Datasets", "cifar-10-batches-py", fileName)
         self.makeDictionary()
@@ -15,8 +13,6 @@ class CifarDataset:
         self.classes = ["Airplane", "Automobile",
                         "Bird", "Cat", "Deer", "Dog", "Frog",
                         "Horse", "Ship", "Truck"]
-
-
 
     def unpickle(self, file):
         with open(file, 'rb') as fo:
@@ -55,4 +51,6 @@ class CifarDataset:
 
 
 x = CifarDataset("data_batch_1")
-x.showImage(1)
+
+for i in range(10):
+    x.showImage(i)

@@ -26,12 +26,12 @@ class DStream:
         return self.currentTime<len(self.values)
     
 
-y = {1,2,3,4,5,6,7,8,9}
+#y = {1,2,3,4,5,6,7,8,9}
 
-x = DStream(y)
+#x = DStream(y)
 
-while(x.hasNext()):
-    print(x.getNext())
+#while(x.hasNext()):
+#    print(x.getNext())
 
     
 
