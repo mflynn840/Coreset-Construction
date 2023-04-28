@@ -1,5 +1,6 @@
 import pickle
 import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 import matplotlib.pyplot as plt
 
 
@@ -55,7 +56,6 @@ x = TestBed("Datasets/cifar-10-batches-py/data_batch")
 def CoresetConstruction(Streams, k):
 
     S_prime = []
-    sum_points = None
 
     # Loop over each stream Si
     for Stream in Streams:
@@ -74,26 +74,27 @@ def CoresetConstruction(Streams, k):
 
             for s_i in S_prime:
                 for s_j in S_prime:
+
                     if s_i != s_j:
-                        dist = # dist between s_i and s_j
+                        dist = cosine_similarity(np.reshape(s_i, (1, -1)), np.reshape(s_j, (1, -1)))
                         if dist < dist_min:
                             dist_min = dist
                             s_min = (s_i, s_j)
 
             s_i = s_min[0]
             s_j = s_min[1]
-            dist_i = # dist between s and s_i
-            dist_j = # dist between s and s_j
+            dist_i = cosine_similarity(np.reshape(s_i, (1, -1)), np.reshape(s, (1, -1)))
+            dist_j = cosine_similarity(np.reshape(s_j, (1, -1)), np.reshape(s, (1, -1)))
 
             # If adding s to S' makes div(S) "better", add s to S'
             if dist_i > dist_min:
                 S_prime.append(s)
 
                 if dist_i > dist_j:
-                    S_prime.remove(s_i) #?
+                    S_prime.remove(s_i)
 
                 else:
-                    S_prime.remove(s_j) #?
+                    S_prime.remove(s_j)
 
     return S_prime
 
