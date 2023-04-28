@@ -67,29 +67,33 @@ def CoresetConstruction(Streams, k):
             if Stream.hasNext():
             # add s to S'
                 S_prime.append(s)
-                if sum_points is None:
-                    sum_points = s
-                else:
-                    sum_points += s
 
         else:
-            avg_points = sum_points / len(S_prime)
+            s_min = (None, None)
+            dist_min = 0
 
-            deviation = s - avg_points
+            for s_i in S_prime:
+                for s_j in S_prime:
+                    if s_i != s_j:
+                        dist = # dist between s_i and s_j
+                        if dist < dist_min:
+                            dist_min = dist
+                            s_min = (s_i, s_j)
 
-            min_dist = min([abs(s - p) for p in S_prime])
-
-            w = deviation / min_dist
-
-            w_prime = [deviation / min_dist for p in S_prime]
-
-            sum_w_prime = sum(w_prime)
+            s_i = s_min[0]
+            s_j = s_min[1]
+            dist_i = # dist between s and s_i
+            dist_j = # dist between s and s_j
 
             # If adding s to S' makes div(S) "better", add s to S'
-            if w > sum_w_prime / len(S_prime):
+            if dist_i > dist_min:
                 S_prime.append(s)
-                sum_points += s
-                sum_points -= S_prime.pop(0)
+
+                if dist_i > dist_j:
+                    S_prime.remove(s_i) #?
+
+                else:
+                    S_prime.remove(s_j) #?
 
     return S_prime
 
