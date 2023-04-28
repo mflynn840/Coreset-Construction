@@ -5,13 +5,13 @@ from collections import OrderedDict
 class DStream:
     def __init__(self, S: set()):
 
-        self.S = s
+        self.S = S
         self.values = OrderedDict()
         self.currentTime = 0
 
-        time=0
-        for s in S:
-            self.values.update({time: s})
+        time = 0
+        for si in S:
+            self.values.update({time: si})
             time += 1
 
     def getSet(self):
@@ -22,17 +22,16 @@ class DStream:
         self.currentTime +=1
         return x
     
+    def hasNext(self):
+        return self.currentTime<len(self.values)
+    
 
 y = {1,2,3,4,5,6,7,8,9}
 
 x = DStream(y)
 
-print(x.getNext())
-print(x.getNext())
-print(x.getNext())
-print(x.getNext())
-print(x.getNext())
-
+while(x.hasNext()):
+    print(x.getNext())
 
     
 
