@@ -3,7 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-#Turns cifar batches into numpy arrays
+
+# Turns cifar batches into numpy arrays
 class CifarDataset:
 
     def __init__(self, fileName: str):
@@ -19,8 +20,7 @@ class CifarDataset:
             dict = pickle.load(fo, encoding='bytes')
         return dict
 
-
-    def makeDictionary(self):   
+    def makeDictionary(self):
         cifar_dict = self.unpickle(self.file)
         # Extract an image and its label from the dictionary
         rawImages = cifar_dict[b'data']
@@ -31,22 +31,21 @@ class CifarDataset:
         for i in range(0, len(rawImages)):
             self.images.append(np.transpose(np.reshape(rawImages[i], (3, 32, 32)), (1, 2, 0)))
 
-
-    def showImage(self, index:int):
+    def showImage(self, index: int):
         # Display the image using Matplotlib
         plt.imshow(self.images[index], interpolation='bicubic')
         plt.title("Class: " + self.classes[self.labels[index]])
         plt.show()
 
     def getElement(self, index: int):
-        return (self.images[index], self.labels[index])
+        return self.images[index], self.labels[index]
 
     def getDataset(self):
 
-        dSet= set()
+        dSet = set()
         for i in range(0, len(self.labels)):
             dSet.union(self.getElement(i))
-        
+
         return dSet
 
 
