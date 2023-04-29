@@ -4,22 +4,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 from numpy import dot
 from numpy.linalg import norm
+from LoadCIFARFile import CIFARVectorSet
 
 
 class TestBed:
 
-    def __init__(self, fileName: str):
-        self.S = set()
-        # S is a set of sets
-        for i in range(1, 6):
-            fName = fileName + "_" + str(i)
-            print(fName)
-            self.S.union(self.unpickle(fName))
+    def __init__(self, batchNum: int, horizon: int):
 
-    def unpickle(self, file):
-        with open(file, 'rb') as fo:
-            dict = pickle.load(fo, encoding='bytes')
-        return dict
+        #self.vectors = 
+        self.Streams = CIFARVectorSet(batchNum).getStreams()
+        # S is a set of sets
+        self.time = 0
+        self.horizon = horizon
 
 
     def div(self, S_prime):
@@ -63,27 +59,30 @@ class TestBed:
 
         return dot(a,b)/(norm(a)*norm(b))
 
-    def CoresetConstruction(self, Streams, k):
+    def makeCoreset(self, k):
         S_prime = []
 
-        # Loop over each stream Si
-        for Stream in Streams:
-            s = Stream.getNext()
+        while(self.time < self.horizon):
+            # Loop over each stream Si
+            for Stream in self.Streams:
+                s = Stream.getNext()
 
-            # if size of S' < k, add s to S'
-            if len(S_prime) < k:
-                if Stream.hasNext():
-                    S_prime.append(s)
+                # if size of S' < k, add s to S'
+                if len(S_prime) < k:
+                    if Stream.hasNext():
+                        S_prime.append(s)
 
-            else:
-                self.adjust(S_prime, s)
+                else:
+                    self.adjust(S_prime, s)
+            self.time += 1
 
         return S_prime
 
 
 # cifar_dict = unpickle("cifar-10-batches-py/data_batch_1")
 
-x = TestBed("Datasets/cifar-10-batches-py/data_batch")
+x = TestBed(0, 1)
+print(x.makeCoreset(1))
 
 # def CoresetConstruction:
 

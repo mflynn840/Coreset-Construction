@@ -89,7 +89,7 @@ class CIFARVectorSet:
 
     def getStreams(self) -> set():
 
-        print(self.vectors.shape)
+        #print(self.vectors.shape)
         streams = []
         for i in range(0, 5):
             #print(self.vectors[1])
