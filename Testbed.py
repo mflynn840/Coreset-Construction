@@ -42,7 +42,7 @@ class TestBed:
         dist_j = self.cosine_similarity(np.reshape(s_j, (1, -1)), np.reshape(s, (1, -1)))
 
         # If adding s to S' makes div(S) "better", add s to S'
-        if dist_i > dist_min | dist_j > dist_min:
+        if dist_i > dist_min or dist_j > dist_min:
             S_prime.append(s)
 
             if dist_i > dist_j:
