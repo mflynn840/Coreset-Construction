@@ -17,6 +17,9 @@ class DStream:
     def getSet(self):
         return self.S
     
+    def getSize(self):
+        return len(self.S)
+    
     def getNext(self):
         x= self.values[self.currentTime]
         self.currentTime +=1

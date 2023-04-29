@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import os
 from numpy import dot
 from numpy.linalg import norm
+from Stream import DStream
 
 
 # Turns cifar batches into numpy arrays
@@ -63,8 +64,9 @@ class CIFARVectorSet:
 
         self.file = os.path.join(os.getcwd(), "Coreset-Construction", "Datasets", "cifar10-vectors-py", "vectors-efficientnet_b" + str(batch))
         self.vectors = self.unpickle(self.file)
-        #print(len(self.dict[1]))
+        #print(self.vectors[0:2])
         #print(len(self.dict))
+        #print("done")
 
     
     def unpickle(self, file):
@@ -72,27 +74,46 @@ class CIFARVectorSet:
             dict = pickle.load(fo, encoding='bytes')
         return dict
     
+    #The SKLearn cosine similary is super slow!
+    #def cosSim(self, index1:int, index2:int) -> float:
+    #    a = self.vectors[index1]
+    #    b = self.vectors[index2]
+
+    #    return dot(a,b)/(norm(a)*norm(b))
+    
     def cosSim(self, index1:int, index2:int) -> float:
         a = self.vectors[index1]
         b = self.vectors[index2]
 
         return dot(a,b)/(norm(a)*norm(b))
 
+    def getStreams(self) -> set():
+
+        print(self.vectors.shape)
+        streams = []
+        for i in range(0, 5):
+            #print(self.vectors[1])
+            streams.append(DStream(self.vectors[i*10000: i*10000+10000]))
         
-x = CIFARVectorSet(6)
-y = CifarDataset(1)
+        return streams
+            
+            
 
 
+        
+x = CIFARVectorSet(0)
+#y = CifarDataset()
 
-ones = []
-for i in range(len(y.labels)):
-    if y.labels[i] == 1:
-        ones.append(i)
+
+#ones = []
+#for i in range(len(y.labels)):
+#    if y.labels[i] == 1:
+#        ones.append(i)
 
 
 #print(ones)
 
-print(x.cosSim(1, ones[2]))
+#print(x.cosSim(1, ones[2]))
 
-y.showImage(1)
-y.showImage(ones[2])
+#y.showImage(1)
+#y.showImage(ones[2])

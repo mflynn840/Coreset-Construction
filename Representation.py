@@ -11,7 +11,7 @@ x_train.shape is the shape of the input vectors
 class CIFAR10Model:
 
     def __init__(self, fileName: str):
-        self.dataset = LoadCIFARFile(fileName)
+        self.x_train = LoadCIFARFile(fileName)
         self.makeModel()
 
 
@@ -20,10 +20,10 @@ class CIFAR10Model:
 
 
         num_classes = 10
-        x
+
         #a Non recurrent, convolutional deep neural networks with 4 hidden layers
-        model = Sequential()
-        model.add(Conv2D(32, (3, 3), padding='same', input_shape=x_train.shape[1:], name='conv1'))
+        model = Sequential() 
+        model.add(Conv2D(32, (3, 3), padding='same', input_shape=self.x_train.shape[1:], name='conv1'))
         model.add(BatchNormalization(axis=3, name='bn_conv1'))
         model.add(Activation('relu'))
         model.add(Conv2D(32, (3, 3), name='conv2'))
@@ -44,8 +44,6 @@ class CIFAR10Model:
         model.add(Dense(num_classes, name='output'))
         model.add(BatchNormalization(axis=1, name='bn_outptut'))
         model.add(Activation('softmax'))
-
-        
 
         self.model = model
 
