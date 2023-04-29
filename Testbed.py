@@ -21,7 +21,7 @@ class TestBed:
 
     def div(self, S_prime):
         s_min = (S_prime[0], S_prime[1])
-        dist_min = self.cosine_similarty(S_prime[0], S_prime[1])
+        dist_min = self.cosine_similarity(S_prime[0], S_prime[1])
 
         for s_i in S_prime:
             for s_j in S_prime:
