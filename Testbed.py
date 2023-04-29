@@ -19,12 +19,18 @@ class TestBed:
         self.horizon = horizon
 
 
-    def div(self, S_prime):
-        s_min = (S_prime[0], S_prime[1])
-        dist_min = self.cosine_similarity(S_prime[0], S_prime[1])
+    def div(self, S_prime: set()):
+
+
+        s_min = (None, None)
+        dist_min = -1
 
         for s_i in S_prime:
             for s_j in S_prime:
+
+                if s_min is (None, None):
+                    s_min = (s_i, s_j)
+                    dist_min = self.cosine_similarity(s_i, s_j)
 
                 if s_i.all() != s_j.all():
 
@@ -38,7 +44,7 @@ class TestBed:
         return s_min, dist_min
 
 
-    def adjust(self, S_prime, s):
+    def adjust(self, S_prime: set(), s):
 
         
         s_min, dist_min = self.div(S_prime)
@@ -54,23 +60,45 @@ class TestBed:
         dist_j = self.cosine_similarity(s_j, s)
 
         # If adding s to S' makes div(S) "better", add s to S'
-        if dist_i > dist_min or dist_j > dist_min:
+
+        print("dist_i: " + str(dist_i))
+        print("dist_j: " + str(dist_j))
+        print("dist_min: " + str(dist_min))
+        if ((dist_i > dist_min) or (dist_j > dist_min)):
+            print("debug")
             S_prime.append(s)
 
             if dist_i > dist_j:
                 S_prime.remove(s_i)
-
             else:
-                S_prime.remove(s_j)
+
+                S_prime(s_j)
+
+    def dot(self, a, b):
+
+        if(len(a) != len(b)):
+            return 0
+        
+        sum = 0
+        for ai in a:
+            for bi in b:
+                sum += ai*bi
+        
+        return sum
+
+
 
 
     #The SKLearn cosine similary is super slow!
     def cosine_similarity(self, a, b) -> float:
 
-        return dot(a,b)/(norm(a)*norm(b))
+        print("dot: " + str(self.dot(a,b)))
+        sim = self.dot(a,b)/(norm(a)*norm(b))
+        print("sim: " + str(sim))
+        return sim
 
     def makeCoreset(self, k):
-        S_prime = []
+        S_prime = set()
 
         print("debug1")
 
@@ -88,7 +116,7 @@ class TestBed:
             # if size of S' < k, add s to S'
             if len(S_prime) < k:
                 print("Core set not yet full")
-                S_prime.append(s)
+                S_prime.update(s)
             else:
                 self.adjust(S_prime, s)
             self.time += 1

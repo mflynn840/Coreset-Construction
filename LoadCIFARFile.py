@@ -107,7 +107,7 @@ x = CIFARVectorSet(0)
 
 #ones = []
 #for i in range(len(y.labels)):
-#    if y.labels[i] == 1:
+#    if y.labels[i] ==   
 #        ones.append(i)
 
 
