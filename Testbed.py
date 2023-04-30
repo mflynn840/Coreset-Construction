@@ -297,6 +297,41 @@ class Graph:
             for item in row:
                 print(item)
 
+    def getSim(self, node1, node2):
+
+        node1Index = -1
+        node2Index = -1
+        for i in range(len(self.nodes)):
+            if(self.nodes[i] == node1):
+                node1Index = i
+            
+            if(self.nodes[i] == node2):
+                node2Index = i
+
+        return self.getSimI(node1Index, node2Index)
+
+    def getSimI(self, i, j):
+
+        if i<j:
+            print(j-1, i)
+            return self.matrix[j-1][i]
+        else:
+            print(i, j)
+            return self.matrix[i][j]
+    
+    def findHighestSim(self):
+
+        highestSim = -1
+        bestPoints = None
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                if self.matrix[i][j] > highestSim:
+                    highestSim = self.matrix[i][j]
+                    bestPoints = (i, j)
+
+        return (self.nodes[i], self.nodes[j])
+
+
 
 nodes = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]
 x = Graph(nodes)
@@ -304,13 +339,33 @@ x = Graph(nodes)
 
 
 
-
+print("0, 1")
 print(x.cosine_similarity(nodes[0], nodes[1]))
+print("2, 0")
 print(x.cosine_similarity(nodes[2], nodes[0]))
+print("2, 1")
 print(x.cosine_similarity(nodes[2], nodes[1]))
+print("3, 0")
 print(x.cosine_similarity(nodes[3], nodes[0]))
+print("3, 1")
 print(x.cosine_similarity(nodes[3], nodes[1]))
+print("3, 2")
 print(x.cosine_similarity(nodes[3], nodes[2]))
+
+
+print("\n\n\n\n\n\n")
+print("0,1")
+print(x.getSimI(1,0))
+print("0, 2")
+print(x.getSimI(2,0))
+print("0, 3")
+print(x.getSimI(3,0))
+print("1, 2")
+print(x.getSimI(2,1))
+print("1, 3")
+print(x.getSimI(3,1))
+print("2, 3")
+print(x.getSimI(3,2))
     
 
 
