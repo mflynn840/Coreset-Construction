@@ -182,6 +182,9 @@ class AdjacenyCorset:
 
     def __init__(self, batchNum: int, horizon: int):
 
+        self.replaced = 0
+        self.notReplaced = 0
+
         t0 = time.time()
         #self.vectors = 
         self.Streams = CIFARVectorSet(batchNum).getStreams()
@@ -233,10 +236,13 @@ class AdjacenyCorset:
                         t0 = time.time()
                         self.graphs.update({i: Graph(self.S_prime[i])})
                         t1 = time.time()
-                        print("Constructing the graph took: " + str(t0-t1) )
+
+                        with open("MatrixConstructionTime.txt", 'a') as File:
+                            File.write(str(k) + ":" + str(t1-t0) + "\n")
+
                         self.setup[i] = True
 
-                    self.adjust(s, i)
+                    self.adjust(s, i, k)
 
                 self.time += 1
 
@@ -254,7 +260,7 @@ class AdjacenyCorset:
 
         return UnionSPrimes
 
-    def adjust(self, newElement, i):
+    def adjust(self, newElement, i, k):
 
         #find smallest value in the graph for s'[i]
 
@@ -270,7 +276,12 @@ class AdjacenyCorset:
                 closest = self.cosine_similarity(point, newElement)
         
         if sim < closest:
+            self.notReplaced += 1
+            
             print("Not replacing element")
+
+            with open("%replacement.txt", 'a') as file:
+                file.write(str(k) + ":" + str(self.replaced/(self.notReplaced+self.replaced)) + "\n")
             return
 
             
@@ -283,22 +294,31 @@ class AdjacenyCorset:
         if dist_i > dist_j:
 
             print("Replacing an element")
+            self.replaced += 1
+
+
+            with open("%replacement.txt", 'a') as file:
+                file.write(str(k) + ":" + str(self.replaced/(self.notReplaced+self.replaced)) + "\n")
             #replace S_i with s in coreset
             #replace S_i with s in graph
             #print("S_i: " + str(S_i))
             #print("S_prime: " + str(self.S_prime[i]))
             index = self.S_prime[i].index(S_i)
             self.S_prime[i][index] = newElement
-            self.graphs[i].replaceElement(S_i, newElement)
+            self.graphs[i].replaceElement(S_i, newElement, k)
             
         else:
             print("Replacing an element")
+            self.replaced += 1
+
+            with open("%replacement.txt", 'a') as file:
+                file.write(str(k) + ":" + str(self.replaced/(self.notReplaced+self.replaced)) + "\n")
             #replace S_j with s in coreset
             #replace S_j with s in graph
             #print("S_j: " + str(S_j))
             index = self.S_prime[i].index(S_j)
             self.S_prime[i][index] = newElement
-            self.graphs[i].replaceElement(S_j, newElement)
+            self.graphs[i].replaceElement(S_j, newElement, k)
 
         
         
@@ -378,7 +398,7 @@ class Graph:
         
         return sum
     
-    def replaceElement(self, oldElement, newElement):
+    def replaceElement(self, oldElement, newElement, k):
 
         t0 = time.time()
         coordinates = self.nodes[str(oldElement)]
@@ -401,7 +421,8 @@ class Graph:
         self.nodes.update({str(newElement): newCoords})
         t1 = time.time()
 
-        print("Replacing element in matrix took: " + str(t1-t0))
+        with open("AvgReplaceTime.txt", 'a') as File:
+            File.write(str(k) + ":" + str(t1-t0) + "\n")
 
     def cosine_similarity(self, a, b) -> float:
 
@@ -472,7 +493,7 @@ class Graph:
 x = AdjacenyCorset(0, 1000)
 
 t0 = time.time()
-y = x.makeCoreset(110)
+y = x.makeCoreset(100)
 t1 = time.time()
 
 
