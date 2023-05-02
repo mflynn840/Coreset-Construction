@@ -7,6 +7,7 @@ from numpy.linalg import norm
 from LoadCIFARFile import CIFARVectorSet
 import pandas as pd
 from pandas import DataFrame as df
+from copy import deepcopy
 
 
 
@@ -244,8 +245,15 @@ class AdjacenyCorset:
 class Graph:
     def __init__(self, nodes: list()):
 
+        self.nodes = dict()
+        self.vectors = dict()
         #k nodes, for a lower triangular kxk matrix
-        self.nodes = nodes
+        for node in nodes:
+            self.nodes.update({str(node): []})
+            self.vectors.update({str(node): node})
+
+
+
         self.matrix = []
 
         for i in range(len(nodes)-1):
@@ -262,12 +270,16 @@ class Graph:
                 #pairs of i,j s.t i!=j and j, i is not included
                 if i!=j and i>j:
                     coords = self.getIndex(i, j)
-
-                    print(i,j)
-                    #print(coords)
-                    self.matrix[coords[0]].append(self.cosine_similarity(self.nodes[i], self.nodes[j]))
+                    #print(i,j)
+                    print(coords)
+                    self.matrix[coords[0]].append(self.cosine_similarity(nodes[i], nodes[j]))
+                    self.nodes[str(nodes[i])].append(coords)
+                    self.nodes[str(nodes[j])].append(coords)
+                    #self.matrix[coords[0]].append( "sim( " + str(letters[i]) + ", " + str(letters[j]))
 
         print(self.matrix)
+        print(self.nodes)
+
 
 
 
@@ -284,6 +296,26 @@ class Graph:
         
         return sum
     
+    def replaceElement(self, oldElement, newElement):
+        coordinates = self.nodes[str(oldElement)]
+
+        for tuple in coordinates:
+            #replace the cosine similarity at thosee coordinates with the cosine similarity of
+            #newElement and the other element that oldElement was compared to
+
+            #find the other element that I need to compare newElement with:
+            for key in self.nodes.keys():
+                if key != str(oldElement):
+                    if tuple in self.nodes[key]:
+                        self.matrix[tuple[0]][tuple[1]] = self.cosine_similarity(self.vectors[key], newElement)
+                        break
+        
+        del self.vectors[str(oldElement)]
+        self.vectors.update({str(newElement): newElement})
+        newCoords = deepcopy(self.nodes[str(oldElement)])
+        del self.nodes[str(oldElement)]
+        self.nodes.update({str(newElement): newCoords})
+
     def cosine_similarity(self, a, b) -> float:
 
         #print("dot: " + str(self.dot(a,b)))
@@ -316,8 +348,8 @@ class Graph:
             print(j-1, i)
             return self.matrix[j-1][i]
         else:
-            print(i, j)
-            return self.matrix[i][j]
+            print(i-1, j)
+            return self.matrix[i-1][j]
     
     def findHighestSim(self):
 
@@ -336,6 +368,7 @@ class Graph:
 nodes = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]
 x = Graph(nodes)
 #x.printGraph()
+x.replaceElement([1,2,3,4], [5,6,7,8])
 
 
 
