@@ -185,45 +185,87 @@ class AdjacenyCorset:
         # S is a set of sets
         self.time = 0
         self.horizon = horizon
+        self.graphs = dict()
+
+        self.S_prime = []
+
+        #initilize S'
+        for i in range(len(self.Streams)):
+            self.S_prime.append([])
+
+
 
     def makeCoreset(self, k):
-        S_prime = []
+        
 
-        for i in range(len(self.Streams)):
-            S_prime.append([])
-
+        #for each time step
         while(True):
+            #for each stream
             for i in range(len(self.Streams)):
                 currentStream = self.Streams[i]
                 #print("curr time: " + str(self.time) + "Time horizon: " + str(self.horizon) + "self.time >= self.horizon?: " + str(self.time >= self.horizon))
-
                 #print("time horizon not met")
+
+                #if the stream isnt empty
                 if currentStream.hasNext():
                     s = currentStream.getNext()
                 else:
                     continue
-
+                
                 # if size of S' < k, add s to S'
-                if len(S_prime[i]) < k:
-                    S_prime.append(s)
-                else:
-                    self.adjust(S_prime[i], s)
-                self.time += 1
+                if len(self.S_prime[i]) < k:
+                    self.S_prime.append(s)
 
-                #print("Time step: " + str(self.time) + "\nCoreset is: " + str(S_prime))
-                #print()
-                #print()
+                else:
+                    if len(self.S_prime[i] == k):
+                        self.graphs.update({i: Graph(self.S_prime[i])})
+
+                    self.adjust(s, i)
+                self.time += 1
 
             if(self.time >= self.horizon):
                 break
 
         UnionSPrimes = []
-        for i in S_prime:
+        for i in self.S_prime:
             for data in i:
                 UnionSPrimes.append(data)
 
         return UnionSPrimes
 
+    def adjust(self, newElement, i):
+
+        #find smallest value in the graph for s'[i]
+
+        #get the 2 vectors that caused this similarity to be in the matrix
+            #CALL THEM S_i and S_j
+
+        #3-tuple with [0] = sim  [1] = S_i [2] S_j
+        sim, S_i, S_j = self.graphs[i].getClosest2Vectors()  
+
+
+        #dist_i <=find similarity between new point and S_i
+        #dist_j <=find similarity between new point and S_j
+        dist_i = self.cosine_similarity(S_i, newElement)
+        dist_j = self.cosine_similarity(S_j, newElement)
+        
+
+        if dist_i > dist_j:
+            #replace S_i with s in coreset
+            #replace S_i with s in graph
+            index = self.S_prime[i].index(S_i)
+            self.S_prime[i][index] = newElement
+            self.graphs[i].replaceElement(S_i, newElement)
+            
+        else:
+            #replace S_j with s in coreset
+            #replace S_j with s in graph
+            index = self.S_prime[i].index(S_j)
+            self.S_prime[i][index] = newElement
+            self.graphs[i].replaceElement(S_j, newElement)
+
+        
+        
 
     def dot(self, a, b):
         if(len(a) != len(b)):
@@ -342,8 +384,10 @@ class Graph:
 
         return self.getSimI(node1Index, node2Index)
 
-    def getSimI(self, i, j):
+    def getSimI(self, i, j) ->float():
 
+        if i == j:
+            return 1.0
         if i<j:
             print(j-1, i)
             return self.matrix[j-1][i]
@@ -361,7 +405,23 @@ class Graph:
                     highestSim = self.matrix[i][j]
                     bestPoints = (i, j)
 
-        return (self.nodes[i], self.nodes[j])
+        return (highestSim, bestPoints)
+    
+    def getClosestTwoVectors(self):
+        #find the coordinates in matrix that have the highestValue
+        bestPoints = self.bestPoints()
+        coords = bestPoints[1]
+        vectors = []
+        #find the 2 vectors in self.nodes that contain that pair of coordinates
+        for key in self.nodes.keys():
+            if coords in self.nodes[key]:
+                vectors.append(self.vectors[key])
+                if len(vectors > 2):
+                    print("WARN: too many vectors")
+
+        return (bestPoints[0], vectors[0], vectors[1])
+        
+        
 
 
 
@@ -409,7 +469,7 @@ def x():
     
 
 
-
+#print(x())
 
 
 
