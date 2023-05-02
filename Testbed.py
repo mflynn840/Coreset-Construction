@@ -233,7 +233,7 @@ class AdjacenyCorset:
                         t0 = time.time()
                         self.graphs.update({i: Graph(self.S_prime[i])})
                         t1 = time.time()
-                        print("Constructing the graph took: " )
+                        print("Constructing the graph took: " + str(t0-t1) )
                         self.setup[i] = True
 
                     self.adjust(s, i)
@@ -314,13 +314,13 @@ class AdjacenyCorset:
     
     def cosine_similarity(self, a, b) -> float:
 
-        t0 = time.time()
+        #t0 = time.time()
         #print("dot: " + str(self.dot(a,b)))
         sim = self.dot(a,b)/(norm(a)*norm(b))
         #print("sim: " + str(sim))
-        t1 = time.time()
+        #t1 = time.time()
 
-        print("Cos similarity took: " + str(t1-t0))
+        #print("Cos similarity took: " + str(t1-t0))
         return sim
     
 
@@ -472,8 +472,12 @@ class Graph:
 x = AdjacenyCorset(0, 1000)
 
 t0 = time.time()
-y = x.makeCoreset(199)
+y = x.makeCoreset(110)
 t1 = time.time()
+
+
+with open("Coreset.txt", 'w') as file:
+    pickle.dump(y, file)
 
 print(len(y))
 print(t1-t0)
