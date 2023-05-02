@@ -5,12 +5,19 @@ from collections import OrderedDict
 class DStream:
     def __init__(self, S: set()):
 
-        self.S = S
+        x = []
+        for vector in S:
+            y = []
+            for value in vector:
+                y.append(value)
+            x.append(y)
+
+        self.S = x
         self.values = OrderedDict()
         self.currentTime = 0
 
         time = 0
-        for si in S:
+        for si in x:
             self.values.update({time: si})
             time += 1
 

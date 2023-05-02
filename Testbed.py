@@ -1,8 +1,10 @@
 import pickle
+import time
 import numpy as np
 #from sklearn.metrics.pairwise import cosine_similarity
 import matplotlib.pyplot as plt
 from numpy import dot
+import numpy
 from numpy.linalg import norm
 from LoadCIFARFile import CIFARVectorSet
 import pandas as pd
@@ -257,7 +259,7 @@ class AdjacenyCorset:
                 closest = self.cosine_similarity(point, newElement)
         
         if sim < closest:
-            print("Not replacing element")
+            #print("Not replacing element")
             return
 
             
@@ -269,18 +271,21 @@ class AdjacenyCorset:
 
         if dist_i > dist_j:
 
-            print("Replacing an element")
+            #print("Replacing an element")
             #replace S_i with s in coreset
             #replace S_i with s in graph
+            #print("S_i: " + str(S_i))
+            #print("S_prime: " + str(self.S_prime[i]))
             index = self.S_prime[i].index(S_i)
             self.S_prime[i][index] = newElement
             self.graphs[i].replaceElement(S_i, newElement)
             
         else:
-            print("Replacing an element")
+            #print("Replacing an element")
             #replace S_j with s in coreset
             #replace S_j with s in graph
-            index = self.S_prime[i].index(S_j.all())
+            #print("S_j: " + str(S_j))
+            index = self.S_prime[i].index(S_j)
             self.S_prime[i][index] = newElement
             self.graphs[i].replaceElement(S_j, newElement)
 
@@ -444,10 +449,14 @@ class Graph:
         
 
 
-x = AdjacenyCorset(0, 1000)
-y = x.makeCoreset(5)
+x = AdjacenyCorset(0, 5000)
+
+t0 = time.time()
+y = x.makeCoreset(200)
+t1 = time.time()
+
 print(len(y))
-print(y)
+print(t1-t0)
 
 
 
