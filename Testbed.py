@@ -182,18 +182,25 @@ class AdjacenyCorset:
 
     def __init__(self, batchNum: int, horizon: int):
 
+        t0 = time.time()
         #self.vectors = 
         self.Streams = CIFARVectorSet(batchNum).getStreams()
         # S is a set of sets
         self.time = 0
         self.horizon = horizon
         self.graphs = dict()
+        self.setup = []
+        for i in range(len(self.Streams)):
+            self.setup.append(False)
 
         self.S_prime = []
 
         #initilize S'
         for i in range(len(self.Streams)):
             self.S_prime.append([])
+
+        t1 = time.time()
+        print("setup took " + str(t1-t0))
 
 
 
@@ -222,8 +229,12 @@ class AdjacenyCorset:
                     self.S_prime[i].append(s)
 
                 else:
-                    if len(self.S_prime[i]) == k:
+                    if len(self.S_prime[i]) == k and not self.setup[i]:
+                        t0 = time.time()
                         self.graphs.update({i: Graph(self.S_prime[i])})
+                        t1 = time.time()
+                        print("Constructing the graph took: " )
+                        self.setup[i] = True
 
                     self.adjust(s, i)
 
@@ -259,7 +270,7 @@ class AdjacenyCorset:
                 closest = self.cosine_similarity(point, newElement)
         
         if sim < closest:
-            #print("Not replacing element")
+            print("Not replacing element")
             return
 
             
@@ -271,7 +282,7 @@ class AdjacenyCorset:
 
         if dist_i > dist_j:
 
-            #print("Replacing an element")
+            print("Replacing an element")
             #replace S_i with s in coreset
             #replace S_i with s in graph
             #print("S_i: " + str(S_i))
@@ -281,7 +292,7 @@ class AdjacenyCorset:
             self.graphs[i].replaceElement(S_i, newElement)
             
         else:
-            #print("Replacing an element")
+            print("Replacing an element")
             #replace S_j with s in coreset
             #replace S_j with s in graph
             #print("S_j: " + str(S_j))
@@ -303,9 +314,13 @@ class AdjacenyCorset:
     
     def cosine_similarity(self, a, b) -> float:
 
+        t0 = time.time()
         #print("dot: " + str(self.dot(a,b)))
         sim = self.dot(a,b)/(norm(a)*norm(b))
         #print("sim: " + str(sim))
+        t1 = time.time()
+
+        print("Cos similarity took: " + str(t1-t0))
         return sim
     
 
@@ -364,6 +379,8 @@ class Graph:
         return sum
     
     def replaceElement(self, oldElement, newElement):
+
+        t0 = time.time()
         coordinates = self.nodes[str(oldElement)]
 
         for tuple in coordinates:
@@ -382,6 +399,9 @@ class Graph:
         newCoords = deepcopy(self.nodes[str(oldElement)])
         del self.nodes[str(oldElement)]
         self.nodes.update({str(newElement): newCoords})
+        t1 = time.time()
+
+        print("Replacing element in matrix took: " + str(t1-t0))
 
     def cosine_similarity(self, a, b) -> float:
 
@@ -449,10 +469,10 @@ class Graph:
         
 
 
-x = AdjacenyCorset(0, 5000)
+x = AdjacenyCorset(0, 1000)
 
 t0 = time.time()
-y = x.makeCoreset(200)
+y = x.makeCoreset(199)
 t1 = time.time()
 
 print(len(y))
