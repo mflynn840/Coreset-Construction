@@ -488,20 +488,14 @@ class Graph:
         return (bestPoints[0], vectors[0], vectors[1])
         
         
+ks = [10, 50, 100, 500]
+for k in ks:
+    x = AdjacenyCorset(0, (5*k + 50))
+    y = x.makeCoreset(k)
 
 
-x = AdjacenyCorset(0, 1000)
-
-t0 = time.time()
-y = x.makeCoreset(100)
-t1 = time.time()
 
 
-with open("Coreset.txt", 'w') as file:
-    pickle.dump(y, file)
-
-print(len(y))
-print(t1-t0)
 
 
 
